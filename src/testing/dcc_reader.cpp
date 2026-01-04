@@ -20,14 +20,21 @@ void notifyDccSpeed(uint16_t Addr, DCC_ADDR_TYPE AddrType, uint8_t Speed, DCC_DI
     Serial.print(SpeedSteps,DEC);
     Serial.print(" Dir: ");
     Serial.println((Dir == DCC_DIR_FWD) ? "Forward" : "Reverse");
+
+    digitalWrite(PIN_PC0, Dir == DCC_DIR_REV ? HIGH : LOW);
 };
 
 void setup() {
     Serial.begin(115200);
 
+    pinMode(PIN_PC0, OUTPUT);
+
     // Set up the DCC library
-    Dcc.pin(2, false);
-    Dcc.init(MAN_ID_DIY, 10, FLAGS_MY_ADDRESS_ONLY | FLAGS_AUTO_FACTORY_DEFAULT, 0);
+    Dcc.pin(PIN_PA4, true);
+    Dcc.init(MAN_ID_DIY, 10, FLAGS_MY_ADDRESS_ONLY | FLAGS_AUTO_FACTORY_DEFAULT, 3);
+    Dcc.setCV(29, 0);
+    Dcc.setCV(1, 3);
+    Serial.println(Dcc.getAddr());
 }
 
 void loop() {
